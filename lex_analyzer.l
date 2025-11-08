@@ -38,7 +38,7 @@ digit	 [0-9]
 
 /* write regular expressions for id, float and integers */
 
-id [letter_][A-Za-z0-9_]*
+id [A-Za-z_][A-Za-z0-9_]*
 
 integers [digit]+
 float_num {digit}+"."{digit}+("E"("+"|"-")?{digit}+)?|"."{digit}+("E"("+"|"-")?{digit}+)?|{digit}+"E"("+"|"-")?{digit}+	
@@ -47,8 +47,8 @@ float_num {digit}+"."{digit}+("E"("+"|"-")?{digit}+)?|"."{digit}+("E"("+"|"-")?{
 %%
 
 {ws}		{ /* ignore whitespace */ }
-{newline}	{ /* do necessary bookkeeping (line number tracking etc.) */ 
-				lines += 1;
+{newline}	{
+				lines ++;
 			}
 
 if     {

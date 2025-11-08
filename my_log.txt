@@ -1,0 +1,29 @@
+Line no 1: Token <INT> Lexeme int found
+
+At line no: 1 type_specifier : INT
+
+int
+
+Line no 1: Token <ID> Lexeme r found
+
+Line no 1: Token <LPAREN> Lexeme ( found
+
+Line no 1: Token <INT> Lexeme int found
+
+At line no: 1 type_specifier : INT
+
+int
+
+Line no 1: Token <RPAREN> Lexeme ) found
+
+At line no: 1 parameter_list : type_specifier
+
+int
+
+Line no 2: Token <LCURL> Lexeme { found
+
+Line no 3: Token <RETURN> Lexeme return found
+
+Line no 3: Token <SEMICOLON> Lexeme ; found
+
+Total lines: 3
