@@ -38,9 +38,9 @@ digit	 [0-9]
 
 /* write regular expressions for id, float and integers */
 
-id [A-Za-z_][A-Za-z0-9_]*
+id [letter_][A-Za-z0-9_]*
 
-integers [0-9]+
+integers [digit]+
 float_num {digit}+"."{digit}+("E"("+"|"-")?{digit}+)?|"."{digit}+("E"("+"|"-")?{digit}+)?|{digit}+"E"("+"|"-")?{digit}+	
 
 
@@ -70,6 +70,42 @@ do    {
 			return DO;
 		}
 
+int    {
+			loglist="Line no "+to_string(lines)+": Token <INT> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return INT;
+		}
+
+float    {
+			loglist="Line no "+to_string(lines)+": Token <FLOAT> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return FLOAT;
+		}
+
+void    {
+			loglist="Line no "+to_string(lines)+": Token <VOID> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return VOID;
+		}
+
+switch    {
+			loglist="Line no "+to_string(lines)+": Token <SWITCH> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return SWITCH;
+		}
+
+default    {
+			loglist="Line no "+to_string(lines)+": Token <DEFAULT> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return DEFAULT;
+		}
+
+
+goto    {
+			loglist="Line no "+to_string(lines)+": Token <GOTO> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return GOTO;
+		}
 
 else   {
 			loglist="Line no "+to_string(lines)+": Token <ELSE> Lexeme "+yytext+" found"+"\n"+"\n";
@@ -92,24 +128,10 @@ break  {
 		}
 
 
-int    {
-			loglist="Line no "+to_string(lines)+": Token <INT> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return INT;
-		}
-
-
 char    {
 			loglist="Line no "+to_string(lines)+": Token <CHAR> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return CHAR;
-		}
-
-
-float    {
-			loglist="Line no "+to_string(lines)+": Token <FLOAT> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return FLOAT;
 		}
 
 
@@ -120,24 +142,10 @@ double    {
 		}
 
 
-void    {
-			loglist="Line no "+to_string(lines)+": Token <VOID> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return VOID;
-		}
-
-
 return    {
 			loglist="Line no "+to_string(lines)+": Token <RETURN> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return RETURN;
-		}
-
-
-switch    {
-			loglist="Line no "+to_string(lines)+": Token <SWITCH> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return SWITCH;
 		}
 
 
@@ -148,13 +156,6 @@ case    {
 		}
 
 
-default    {
-			loglist="Line no "+to_string(lines)+": Token <DEFAULT> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return DEFAULT;
-		}
-
-
 continue   {
 			loglist="Line no "+to_string(lines)+": Token <CONTINUE> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
@@ -162,14 +163,7 @@ continue   {
 		}
 
 
-goto    {
-			loglist="Line no "+to_string(lines)+": Token <GOTO> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return GOTO;
-		}
-
-
-println    {
+printf    {
 			loglist="Line no "+to_string(lines)+": Token <PRINTLN> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return PRINTF;
@@ -184,6 +178,14 @@ println    {
 			return CONST_INT;
 		}
 
+{float_num}    {
+			symbol_info *s = new symbol_info((string)yytext,"CONST_FLOAT");
+                	yylval = (YYSTYPE)s;
+			loglist="Line no "+to_string(lines)+": Token <CONST_FLOAT> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return CONST_FLOAT;
+		}
+
 
 {id} {
 
@@ -195,56 +197,52 @@ println    {
 		}
 
 
-{float_num}    {
-			symbol_info *s = new symbol_info((string)yytext,"CONST_FLOAT");
-                	yylval = (YYSTYPE)s;
-			loglist="Line no "+to_string(lines)+": Token <CONST_FLOAT> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return CONST_FLOAT;
-		}
 
-
-"+"|"-" {
+"+"|"-" {	symbol_info *s = new symbol_info((string)yytext, "ADDOP");
+			yylval = (YYSTYPE)s;
 			loglist="Line no "+to_string(lines)+": Token <ADDOP> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return ADDOP;
 		}
 
 
-"*"|"/"|"%" {
+"*"|"/"|"%" {	symbol_info *s = new symbol_info((string)yytext, "MULOP");
+			yylval = (YYSTYPE)s;
 			loglist="Line no "+to_string(lines)+": Token <MULOP> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return MULOP;
 		}
 
 
-"++"|"--" {
+"++"|"--" {	symbol_info *s = new symbol_info((string)yytext, "INCOP");
+			yylval = (YYSTYPE)s;
 			loglist="Line no "+to_string(lines)+": Token <INCOP> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return INCOP;
 		}
 
 
-"<"|">"|"=="|"<="|">="|"!=" {
+"<"|">"|"=="|"<="|">="|"!=" {	symbol_info *s = new symbol_info((string)yytext, "RELOP");
+			yylval = (YYSTYPE)s;
 			loglist="Line no "+to_string(lines)+": Token <RELOP> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return RELOP;
 		}
 
 
-"="     {
-			loglist="Line no "+to_string(lines)+": Token <ASSIGNOP> Lexeme "+yytext+" found"+"\n"+"\n";
-			outlog<<loglist;
-			return ASSIGNOP;
-		}
 
-
-"&&"|"||" {
+"&&"|"||" {	symbol_info *s = new symbol_info((string)yytext, "LOGICOP");
+			yylval = (YYSTYPE)s;
 			loglist="Line no "+to_string(lines)+": Token <LOGICOP> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return LOGICOP;
 		}
 
+"="     {
+			loglist="Line no "+to_string(lines)+": Token <ASSIGNOP> Lexeme "+yytext+" found"+"\n"+"\n";
+			outlog<<loglist;
+			return ASSIGNOP;
+		}
 
 "!"     {
 			loglist="Line no "+to_string(lines)+": Token <NOT> Lexeme "+yytext+" found"+"\n"+"\n";
