@@ -901,7 +901,7 @@ YY_RULE_SETUP
 #line 181 "lex_analyzer.l"
 {
 			symbol_info *s = new symbol_info((string)yytext,"CONST_FLOAT");
-                	yylval = (YYSTYPE)s;
+            yylval = (YYSTYPE)s;
 			loglist="Line no "+to_string(lines)+": Token <CONST_FLOAT> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return CONST_FLOAT;
@@ -913,7 +913,7 @@ YY_RULE_SETUP
 {
 
 			symbol_info *s = new symbol_info((string)yytext,"ID");
-                	yylval = (YYSTYPE)s;
+            yylval = (YYSTYPE)s;
 			loglist="Line no "+to_string(lines)+": Token <ID> Lexeme "+yytext+" found"+"\n"+"\n";
 			outlog<<loglist;
 			return ID;
